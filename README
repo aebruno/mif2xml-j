@@ -1,0 +1,23 @@
+===============================================================================
+mif2xml - Convert MIF files to XML 
+===============================================================================
+
+ABOUT 
+
+mif2xml is a tool which reads in MIF (Maker Interchange Format) files produced
+from FrameMaker and converts them to XML. The XML attempts to be very similar
+to the original MIF. Input is read from stdin and XML is written to stdout. 
+
+** Java version 1.5 or greater is required **
+
+Example usage:
+
+    $ java -jar mif2xml.jar file.mif > output.xml
+
+BUILDING
+
+    $ ant
+
+AUTHOR
+
+mif2xml was written by Andrew Bruno <aeb@qnot.org>
