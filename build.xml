@@ -24,8 +24,8 @@ Author: Andrew Bruno <aeb@qnot.org>
     <property name="build" location="${basedir}/build" />
     <property name="lib" location="${basedir}/lib" />
     <property name="name" value="mif2xml" />
-    <property name="version" value="0.0.1" />
-    <property name="dist-name" value="${name}" />
+    <property name="version" value="0.1" />
+    <property name="dist-name" value="${name}-${version}" />
     <property name="scanner-file" value="${basedir}/src/main/jflex/mif.jflex" />
 
     <path id="classpath">
@@ -41,8 +41,7 @@ Author: Andrew Bruno <aeb@qnot.org>
         <echo message="Using java version: ${java.version}" />
         <echo message="Creating build directory" />
         <mkdir dir="${build}" />
-    </target>
-
+    </target> 
     <target name="jflex" description="generate lexer">
         <echo message="Generating Lexer" />
         <jflex file="${scanner-file}" destdir="${src}" />
@@ -51,7 +50,7 @@ Author: Andrew Bruno <aeb@qnot.org>
     <target name="clean" description="Clean up build">
         <echo message="Cleaning up!" />
         <delete dir="${build}" />
-        <delete file="${basedir}/${dist-name}.jar" />
+        <delete file="${basedir}/${name}.jar" />
         <delete file="${src}/org/qnot/mif2xml/MifLexer.java" />
         <delete file="${src}/org/qnot/mif2xml/MifLexer.java~" />
     </target>
@@ -64,8 +63,22 @@ Author: Andrew Bruno <aeb@qnot.org>
     </target>
 
     <target name="jar" depends="build" description="generate the jar file" >
-        <jar manifest="${resources}/MANIFEST" destfile="${basedir}/${dist-name}.jar">
+        <jar manifest="${resources}/MANIFEST" destfile="${basedir}/${name}.jar">
             <fileset dir="${build}" includes="**" />
         </jar>
     </target>
+
+    <target name="dist" depends="jar" description="generate the source dist" >
+       <echo message="Building Source distribution" />
+        <delete file="${basedir}/${dist-name}.zip" />
+        <zip destfile="${basedir}/${dist-name}.zip">
+            <zipfileset dir="${basedir}/src" prefix="${dist-name}/src" />
+            <zipfileset dir="${lib}" prefix="${dist-name}/lib" />
+            <zipfileset dir="${basedir}" includes="README" prefix="${dist-name}" />
+            <zipfileset dir="${basedir}" includes="LICENSE" prefix="${dist-name}" />
+            <zipfileset dir="${basedir}" includes="build.xml" prefix="${dist-name}" />
+            <zipfileset dir="${basedir}" includes="${name}.jar" prefix="${dist-name}" />
+        </zip>
+    </target>
+
 </project>
