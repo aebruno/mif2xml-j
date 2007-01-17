@@ -44,98 +44,98 @@ WHITE_SPACE_CHAR=[ \n\t]
 
 <YYINITIAL> { 
    {TAG}   {
-		Tag tag = new Tag();
-		tag.setName(yytext().substring(1, yytext().length()-1));
-		tags.push(tag);
-		tag.writeStart();
-		data = new StringBuffer();
-		yybegin(DATA);
-	}
+        Tag tag = new Tag();
+        tag.setName(yytext().substring(1, yytext().length()-1));
+        tags.push(tag);
+        tag.writeStart();
+        data = new StringBuffer();
+        yybegin(DATA);
+    }
 
-	{TAG_END}   {
-		if(!tags.empty()) {
-			Tag tag = (Tag)tags.pop();
-			tag.writeEnd();
-		}
-	}
+    {TAG_END}   {
+        if(!tags.empty()) {
+            Tag tag = (Tag)tags.pop();
+            tag.writeEnd();
+        }
+    }
 
-	^"="[a-zA-Z][a-zA-Z0-9]*{NEWLINE} {
-		facet = new StringBuffer();
-		facet.append(yytext());
-		yybegin(FACET);
-	}
+    ^"="[a-zA-Z][a-zA-Z0-9]*{NEWLINE} {
+        facet = new StringBuffer();
+        facet.append(yytext());
+        yybegin(FACET);
+    }
 
-	{WHITE_SPACE_CHAR}+   {  /* eat up whitespace */ }
-	{NONNEWLINE}          {  /* eat up everything else  */ }
+    {WHITE_SPACE_CHAR}+   {  /* eat up whitespace */ }
+    {NONNEWLINE}          {  /* eat up everything else  */ }
 }
 
 <DATA> {
-	{NEWLINE}  {  
-		if(!tags.empty()) {
-			Tag tag = (Tag)tags.pop();
-			tag.setValue(data.toString());
-			tags.push(tag);
-		}
-		yybegin(YYINITIAL); 
-	}
-	"`"  {  yybegin(STR); }
-	{TAG_END}  {  
-		if(!tags.empty()) {
-			Tag tag = (Tag)tags.pop();
-			String value = tag.getValue();
+    {NEWLINE}  {  
+        if(!tags.empty()) {
+            Tag tag = (Tag)tags.pop();
+            tag.setValue(data.toString());
+            tags.push(tag);
+        }
+        yybegin(YYINITIAL); 
+    }
+    "`"  {  yybegin(STR); }
+    {TAG_END}  {  
+        if(!tags.empty()) {
+            Tag tag = (Tag)tags.pop();
+            String value = tag.getValue();
 
-			String dataStr = data.toString();
-			if(dataStr != null && dataStr.length() > 0) {
-				value = dataStr;
-			}
+            String dataStr = data.toString();
+            if(dataStr != null && dataStr.length() > 0) {
+                value = dataStr;
+            }
 
-			if(value != null) {
-				value = value.replaceAll("^\\s+", "");
-				value = value.replaceAll("\\s+$", "");
-			}
+            if(value != null) {
+                value = value.replaceAll("^\\s+", "");
+                value = value.replaceAll("\\s+$", "");
+            }
 
-			tag.setValue(value);
-			tag.writeEnd();
-		}
-		yybegin(YYINITIAL); 
-	}
-	[^\n|\r|\r\n|`|>] {
-		data.append(yytext());
-	}
+            tag.setValue(value);
+            tag.writeEnd();
+        }
+        yybegin(YYINITIAL); 
+    }
+    [^\n|\r|\r\n|`|>] {
+        data.append(yytext());
+    }
 }
 
 <STR> {
-	"'"  {  
-		if(!tags.empty()) {
-			Tag tag = (Tag)tags.pop();
-			if(tag.getValue() == null || tag.getValue().length() == 0) {
-				tag.setValue("`'");
-			}
-			tags.push(tag);
-		}
-		yybegin(YYINITIAL); 
-	}
-	[^']*  {
-		if(!tags.empty()) {
-			Tag tag = (Tag)tags.pop();
-			StringBuffer buf = new StringBuffer();
-			buf.append("`");
-			buf.append(yytext());
-			buf.append("'");
-			tag.setValue(buf.toString());
-			tags.push(tag);
-		}
-	}
+    "'"  {  
+        if(!tags.empty()) {
+            Tag tag = (Tag)tags.pop();
+            if(tag.getValue() == null || tag.getValue().length() == 0) {
+                tag.setValue("`'");
+            }
+            tags.push(tag);
+        }
+        yybegin(YYINITIAL); 
+    }
+    [^']*  {
+        if(!tags.empty()) {
+            Tag tag = (Tag)tags.pop();
+            StringBuffer buf = new StringBuffer();
+            buf.append("`");
+            buf.append(yytext());
+            buf.append("'");
+            tag.setValue(buf.toString());
+            tags.push(tag);
+        }
+    }
 }
 
 <FACET> {
-	^"=EndInset"{NEWLINE} {
-		facet.append(yytext());
-		Tag.writeFacet(facet.toString());
-		yybegin(YYINITIAL);
-	}
+    ^"=EndInset"{NEWLINE} {
+        facet.append(yytext());
+        Tag.writeFacet(facet.toString());
+        yybegin(YYINITIAL);
+    }
 
     .*{NEWLINE} {
-		facet.append(yytext());
-	}
+        facet.append(yytext());
+    }
 }
