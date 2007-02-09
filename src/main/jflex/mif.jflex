@@ -61,10 +61,12 @@ WHITE_SPACE_CHAR=[ \n\t]
 
     ^"="[a-zA-Z][a-zA-Z0-9]*{NEWLINE} {
         String beginToken = yytext();
+        facet = new StringBuffer();
+        facet.append(beginToken);
         if(!beginToken.startsWith("=EndInset")) {
-            facet = new StringBuffer();
-            facet.append(beginToken);
             yybegin(FACET);
+        } else {
+            Tag.writeFacet(facet.toString());
         }
     }
 
