@@ -24,7 +24,7 @@ Author: Andrew Bruno <aeb@qnot.org>
     <property name="build" location="${basedir}/build" />
     <property name="lib" location="${basedir}/lib" />
     <property name="name" value="mif2xml" />
-    <property name="version" value="0.1" />
+    <property name="version" value="0.2" />
     <property name="dist-name" value="${name}-${version}" />
     <property name="scanner-file" value="${basedir}/src/main/jflex/mif.jflex" />
 
