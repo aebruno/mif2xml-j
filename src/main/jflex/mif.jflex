@@ -60,9 +60,12 @@ WHITE_SPACE_CHAR=[ \n\t]
     }
 
     ^"="[a-zA-Z][a-zA-Z0-9]*{NEWLINE} {
-        facet = new StringBuffer();
-        facet.append(yytext());
-        yybegin(FACET);
+        String beginToken = yytext();
+        if(!beginToken.startsWith("=EndInset")) {
+            facet = new StringBuffer();
+            facet.append(beginToken);
+            yybegin(FACET);
+        }
     }
 
     {WHITE_SPACE_CHAR}+   {  /* eat up whitespace */ }
