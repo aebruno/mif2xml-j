@@ -57,7 +57,7 @@ Author: Andrew Bruno <aeb@qnot.org>
 
     <target name="build" depends="prepare,jflex" description="compile the source " >
         <echo message="Compiling the source" />
-        <javac srcdir="${src}" destdir="${build}" debug="true">
+        <javac srcdir="${src}" destdir="${build}" target="1.5" debug="true">
             <classpath refid="classpath" />
         </javac>
     </target>
