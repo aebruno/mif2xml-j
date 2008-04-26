@@ -28,6 +28,7 @@ import java.util.Stack;
 %line
 %char
 %standalone
+%unicode
 %class  MifLexer
 %xstate DATA
 %xstate STR
@@ -134,13 +135,12 @@ WHITE_SPACE_CHAR=[ \n\t]
 }
 
 <FACET> {
-    ^"=EndInset"{NEWLINE} {
+    ^.*{NEWLINE} {
+        String str = yytext();
         facet.append(yytext());
-        Tag.writeFacet(facet.toString());
-        yybegin(YYINITIAL);
-    }
-
-    .*{NEWLINE} {
-        facet.append(yytext());
+        if(str != null && str.startsWith("=EndInset")) {
+            Tag.writeFacet(facet.toString());
+            yybegin(YYINITIAL);
+        }
     }
 }
